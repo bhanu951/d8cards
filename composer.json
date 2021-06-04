@@ -28,7 +28,6 @@
         "oomphinc/composer-installers-extender": "^2.0"
     },
     "require-dev": {
-        "chi-teck/drupal-coder-extension": "^1.0",
         "drupal/coder": "^8.3",
         "drupal/core-dev": "^8.8",
         "mglaman/drupal-check": "^1.1",
