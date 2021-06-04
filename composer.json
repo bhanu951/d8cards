@@ -36,8 +36,7 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.88",
         "phpstan/phpstan-deprecation-rules": "^0.12.6",
-        "vlucas/phpdotenv": "^5.3",
-        "weitzman/drupal-test-traits": "^1.5"
+        "vlucas/phpdotenv": "^5.3"
     },
     "conflict": {
         "drupal/drupal": "*"
