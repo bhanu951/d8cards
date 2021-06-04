@@ -1,4 +1,4 @@
-name: Build & lint project
+name: Build & Test Drupal
 on: [push]
 
 env:
@@ -13,7 +13,6 @@ jobs:
         php-version:
           - '7.3'
           - '7.4'
-          - '8.0'
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
@@ -52,7 +51,6 @@ jobs:
         php-version:
           - '7.3'
           - '7.4'
-          - '8.0'
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@v2'
