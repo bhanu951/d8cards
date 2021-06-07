@@ -37,16 +37,19 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
-      - name: 'Determine composer cache directory'
-        id: 'determine-composer-cache-directory-v1'
-        run: echo "::set-output name=directory::$(composer config cache-dir)"
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: 'Cache dependencies installed with composer'
-        uses: 'actions/cache@v2'
+      - uses: actions/cache@v2
         with:
-          path: ${{ steps.determine-composer-cache-directory.outputs.directory }}
-          key: php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: php-${{ matrix.php-versions }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+
           
       - name: Update composer
         run: composer --verbose self-update --${{ matrix.composer-channel }}
