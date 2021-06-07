@@ -7,9 +7,7 @@ env:
   SIMPLETEST_DB: sqlite://tmp/site.sqlite
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
 
-
 jobs:
-
   build:
     name: Build
     runs-on: "ubuntu-latest"
@@ -53,7 +51,7 @@ jobs:
           composer --verbose install
           echo "export PATH=$PATH:$GITHUB_WORKSPACE/vendor/bin" >> ~/.bash_profile
           
-      - run: ./vendor/bin/drush si --verbose --yes --db-url=sqlite://tmp/site.sqlite
+      - run: ./vendor/bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
 
       - run: ./vendor/bin/drush runserver $SIMPLETEST_BASE_URL &
 
@@ -62,7 +60,7 @@ jobs:
         # https://www.drupal.org/project/drupal/issues/3182653
         # https://www.drupal.org/node/3176567
       - if: ${{ matrix.php-versions == '7.4' }} || ${{ matrix.php-versions == '8.0' }}
-        run: composer require phpspec/prophecy-phpunit
+        run: composer require phpspec/prophecy-phpunit:^2
 
       - name: Run a single unit test to verfiy the testing setup.
         run: ./vendor/bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
