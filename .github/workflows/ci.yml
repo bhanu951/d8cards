@@ -10,7 +10,7 @@ env:
 jobs:
   build:
     runs-on: "ubuntu-latest"
-    name: "Tests | PHP ${{ matrix.php-version }} | Drupal ${{ matrix.drupal-release }}"
+    name: "Tests | PHP ${{ matrix.php-versions }} | Drupal ${{ matrix.drupal-release }}"
     strategy:
       fail-fast: false
       matrix:
