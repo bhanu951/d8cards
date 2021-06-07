@@ -42,9 +42,12 @@ jobs:
       - name: Dump composer verson
         run: composer --version
 
-      - name: Validate composer.json
-        run: composer --verbose validate
-
+      - name: Validate composer.json and composer.lock
+        run: composer --verbose validate --strict
+      
+      - name: Remove vendor directory for integration testing
+        run: rm -rf vendor/ web/core/
+        
       - name: Install dependencies
         run: |
           composer --verbose install
@@ -64,4 +67,21 @@ jobs:
       - name: Run a single unit test to verfiy the testing setup.
         run: ./vendor/bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
 
-      - run: ./vendor/bin/drush st
+      - name: Checking Coding standards.
+        run: ./vendor/bin/phpunit -c
+        
+      - name: Checking Depreceated code.
+        run: |
+          ./vendor/bin/drupal-check -vvv web/modules/custom
+          ./vendor/bin/drupal-check -vvv web/themes/custom
+          ./vendor/bin/drupal-check -vvv web/profiles/custom
+        
+      - name: Checking Site Status.
+        run:  ./vendor/bin/drush st
+        
+      - name: Config Deployment
+        run: |
+        ./vendor/bin/drush cr
+        ./vendor/bin/drush updb -y
+        ./vendor/bin/drush cim -y
+        ./vendor/bin/drush cr
