@@ -14,7 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.3', '7.4', '8.0']
+        php-version:
+          - "7.4"
+          - "8.0"
         drupal-release: ['stable']
         composer-channel: ['stable']
         include:
@@ -71,4 +73,4 @@ jobs:
       - name: Run a single unit test to verfiy the testing setup.
         run: ./vendor/bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
 
-      - run: ./vendor/bin/drush
+      - run: ./vendor/bin/drush st

@@ -64,6 +64,7 @@
         ]
     },
     "extra": {
+        "enable-patching": true,
         "drupal-scaffold": {
             "locations": {
                 "web-root": "web/"
