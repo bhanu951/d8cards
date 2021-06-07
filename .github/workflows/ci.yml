@@ -14,10 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version:
-          - "7.4"
-          - "8.0"
-        drupal-release: ['stable']
+        php-versions: ['7.3', '7.4', '8.0']
+        drupal-release: ['^8.9', '^9.1', stable']
         composer-channel: ['stable']
         include:
           - php-versions: '8.0'
