@@ -1,4 +1,4 @@
-name: CI
+name: Build & Test Drupal
 
 on: [push]
 
@@ -7,37 +7,37 @@ env:
   SIMPLETEST_DB: sqlite://tmp/site.sqlite
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
 
+
 jobs:
+
   build:
+    name: Build
     runs-on: "ubuntu-latest"
-    name: "Tests | PHP ${{ matrix.php-versions }} | Drupal ${{ matrix.drupal-release }}"
+    name: "Tests | PHP ${{ matrix.php-versions }} | Drupal ${{ matrix.drupal }}"
     strategy:
-      fail-fast: false
       matrix:
-        php-versions: ['7.3', '7.4', '8.0']
-        drupal-release: ['^8.9', '^9.1', 'stable']
-        composer-channel: ['stable']
-        include:
-          - php-versions: '8.0'
-            drupal-release: dev
-            composer-channel: stable
-          - php-versions: '8.0'
-            drupal-release: stable
-            composer-channel: snapshot
+        experimental: [false]
+        php-versions:
+          - "7.3"
+          - "7.4"
+        drupal:
+          - "^8.9"
     steps:
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
 
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
         with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: gd, pdo_sqlite
+          coverage: "none"
+          php-version: "${{ matrix.php-versions }}"
+          tools: composer:v2
+          extensions: dom, curl, libxml, mbstring, zip, pdo, mysql, pdo_mysql, gd, pdo_sqlite
+          
+      - name: Check PHP Version
+        run: |
+          php -v
 
       - name: Update composer
         run: composer --verbose self-update --${{ matrix.composer-channel }}
@@ -49,15 +49,11 @@ jobs:
         run: composer --verbose validate
 
       - name: Install dependencies
-        run: composer --verbose install
-
-      - if: matrix.drupal-release == 'dev'
-        run: composer --verbose require --no-update drupal/core-recommended:8.9.x-dev && composer --verbose require --no-update --dev drupal/core-dev:8.9.x-dev
-
-      - if: matrix.drupal-release == 'dev'
-        run: composer --verbose update
-
-      - run: ./vendor/bin/drush site-install --verbose --yes --db-url=sqlite://tmp/site.sqlite
+        run: |
+          composer --verbose install
+          echo "export PATH=$PATH:$GITHUB_WORKSPACE/vendor/bin" >> ~/.bash_profile
+          
+      - run: ./vendor/bin/drush si --verbose --yes --db-url=sqlite://tmp/site.sqlite
 
       - run: ./vendor/bin/drush runserver $SIMPLETEST_BASE_URL &
 
