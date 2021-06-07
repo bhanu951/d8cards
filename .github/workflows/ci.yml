@@ -71,7 +71,7 @@ jobs:
       #   run: ./vendor/bin/phpunit -c ./web/modules/custom ./web/themes/custom ./web/profiles/custom
       
       - name: Check Drupal best practices
-        run: phpcs --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml ./web/modules/custom ./web/themes/custom ./web/profiles/custom
+        run: ./vendor/bin/phpcs --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml ./web/modules/custom ./web/themes/custom ./web/profiles/custom
         
       - name: Checking Depreceated code.
         run: |
