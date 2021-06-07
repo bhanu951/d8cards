@@ -9,9 +9,8 @@ env:
 
 jobs:
   build:
-    name: Build
-    runs-on: "ubuntu-latest"
     name: "Tests | PHP ${{ matrix.php-versions }} | Drupal ${{ matrix.drupal }}"
+    runs-on: "ubuntu-latest"
     strategy:
       matrix:
         experimental: [false]
