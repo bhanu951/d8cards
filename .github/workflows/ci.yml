@@ -1,9 +1,7 @@
 name: Build & Test Drupal
 
 on: [push]
-  
-  schedule:
-    - cron:  '0 1 * * *'
+
 env:
   COMPOSER_MEMORY_LIMIT: -1
   SIMPLETEST_DB: sqlite://tmp/site.sqlite
