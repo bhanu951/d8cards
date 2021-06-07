@@ -1,7 +1,9 @@
 name: Build & Test Drupal
 
 on: [push]
-
+  
+  schedule:
+    - cron:  '0 1 * * *'
 env:
   COMPOSER_MEMORY_LIMIT: -1
   SIMPLETEST_DB: sqlite://tmp/site.sqlite
@@ -68,7 +70,10 @@ jobs:
         run: ./vendor/bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
 
       - name: Checking Coding standards.
-        run: ./vendor/bin/phpunit -c
+        run: ./vendor/bin/phpunit -c ./web/modules/custom ./web/themes/custom ./web/profiles/custom
+      
+      - name: Check Drupal best practices
+        run: phpcs --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml ./web/modules/custom ./web/themes/custom ./web/profiles/custom
         
       - name: Checking Depreceated code.
         run: |
