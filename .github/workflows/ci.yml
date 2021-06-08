@@ -19,10 +19,23 @@ jobs:
           - "7.4"
         drupal:
           - "^8.9"
+       services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+        - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        
     steps:
-
+      - name: Verify MySQL connection from host
+        run: |
+          sudo apt-get install -y mysql-client
+          mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -proot -e "select @@hostname;show variables where Variable_name like '%host%';"
+          
       - name: Checkout 🛎️
-        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        uses: actions/checkout@v2
         with:
           persist-credentials: false
         
@@ -65,7 +78,8 @@ jobs:
           composer --verbose install
           echo "export PATH=$PATH:$GITHUB_WORKSPACE/vendor/bin" >> ~/.bash_profile
           
-      - run: ./vendor/bin/drush si standard --site-name='D8cards Test' --account-name=admin --account-pass=admin --account-mail='admin@d8cards.test' --sites-subdir=default --locale='uk'&&'de'&&'te' --verbose --yes --db-url=sqlite://tmp/site.sqlite
+      - name: Install Site
+        run: ./vendor/bin/drush si standard --site-name='D8cards Test' --account-name=admin --account-pass=admin --account-mail='admin@d8cards.test' --sites-subdir=default --locale='te' --verbose --yes --db-url=mysql://root:root@127.0.0.1/d8cards
 
       - run: ./vendor/bin/drush runserver $SIMPLETEST_BASE_URL &
 
