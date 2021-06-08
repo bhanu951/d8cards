@@ -102,7 +102,7 @@ jobs:
           # ./vendor/bin/drush cr
           # ./vendor/bin/drush st
 
-      - name: Config Deployment
+      - name: Deployment Script
         run: |
           sudo chmod u+x deploy-script.sh
           ./deploy-script.sh
