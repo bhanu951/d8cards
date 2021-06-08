@@ -124,7 +124,8 @@
         },
         "patches": {
           "bhanu951/example_codes": {
-            "Fix depreceated code in command examples" : "./patches/fix-depreceated-code-in-command-examples.patch"
+            "Fix depreceated code in command examples" : "./patches/fix-depreceated-code-in-command-examples.patch",
+            "Fix depreceated code in queue examples" : "./patches/fix-depreceated-code-in-queue-examples.patch"
           }
         }
     }
