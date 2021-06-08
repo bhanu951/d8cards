@@ -19,6 +19,17 @@ composer --version
 echo "Backup databases before update."
 ./vendor/bin/drush sql:dump --gzip --result-file=./sites/default/files/d8cards-backup-`date +%Y-%m-%d-%H.%M.%S`.sql
 
+## Drop old database
+echo "Drop old database"
+./vendor/bin/drush sql:drop -y
+
+## Restore the backup
+./vendor/bin/drush sqlc < ./databases/d8cards_clean.sql
+
+## Clear cache to reflect imported database.
+echo "Clear cache to reflect imported database."
+./vendor/bin/drush cr
+
 ## Set site in maintenance mode.
 echo "Set site in maintenance mode."
 ./vendor/bin/drush sset system.maintenance_mode 1
