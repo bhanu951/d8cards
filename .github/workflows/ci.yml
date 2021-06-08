@@ -94,11 +94,16 @@ jobs:
       - name: Checking Site Status.
         run:  ./vendor/bin/drush st
         
+      # - name: Config Deployment
+        # run: |
+          # ./vendor/bin/drush cr
+          # ./vendor/bin/drush updb -y
+          # ./vendor/bin/drush cim -y
+          # ./vendor/bin/drush cr
+          # ./vendor/bin/drush st
+
       - name: Config Deployment
         run: |
-          ./vendor/bin/drush cr
-          ./vendor/bin/drush updb -y
-          ./vendor/bin/drush cim -y
-          ./vendor/bin/drush cr
-          ./vendor/bin/drush st
-
+          chmod u+x deploy-script.sh
+          ./deploy-script.sh
+        
