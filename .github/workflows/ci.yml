@@ -93,6 +93,15 @@ jobs:
         
       - name: Checking Site Status.
         run:  ./vendor/bin/drush st
+
+      - name: Export Database.
+        run:  |
+          ./vendor/bin/drush sql:dump --gzip --result-file=./databases/d8cards-backup.sqlite -y
+          git branch
+          git status
+          git add databases/
+          git commit -m "Sql Lite Database Created."
+          git push
         
       # - name: Config Deployment
         # run: |
