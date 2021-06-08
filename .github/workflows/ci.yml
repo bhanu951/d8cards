@@ -96,7 +96,7 @@ jobs:
 
       - name: Export Database.
         run:  |
-          ./vendor/bin/drush sql:dump --gzip --result-file=./databases/d8cards-backup.sqlite -y
+          ./vendor/bin/drush sql:dump > ./databases/sql_dump.sqlite
           git branch
           git status
           git add databases/
