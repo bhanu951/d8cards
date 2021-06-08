@@ -65,7 +65,7 @@ jobs:
           composer --verbose install
           echo "export PATH=$PATH:$GITHUB_WORKSPACE/vendor/bin" >> ~/.bash_profile
           
-      - run: ./vendor/bin/drush si standard --site-name='D8cards Test' --account-name=admin --account-pass=admin --account-mail='admin@d8cards.test' --sites-subdir=default --locale='en','de' --verbose --yes --db-url=sqlite://tmp/site.sqlite
+      - run: ./vendor/bin/drush si standard --site-name='D8cards Test' --account-name=admin --account-pass=admin --account-mail='admin@d8cards.test' --sites-subdir=default --locale='en','uk' --verbose --yes --db-url=sqlite://tmp/site.sqlite
 
       - run: ./vendor/bin/drush runserver $SIMPLETEST_BASE_URL &
 
