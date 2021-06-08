@@ -24,7 +24,7 @@ echo "Dropping old database"
 ./vendor/bin/drush sql:drop -y
 
 ## Restore the backup
-./vendor/bin/drush sqlc < ./databases/d8cards_clean.sql
+./vendor/bin/drush sqlc < ./databases/d8cards_clean.sqlite
 
 ## Clear cache to reflect imported database.
 echo "Clear cache to reflect imported database."
