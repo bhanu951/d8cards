@@ -4,7 +4,7 @@ on: [push]
 
 env:
   COMPOSER_MEMORY_LIMIT: -1
-  SIMPLETEST_DB: sqlite://tmp/site.sqlite
+  # SIMPLETEST_DB: mysql://root:root@127.0.0.1/d8cards
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
 
 jobs:
