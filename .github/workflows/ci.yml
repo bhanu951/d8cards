@@ -91,17 +91,6 @@ jobs:
         
       - name: Checking Site Status.
         run:  ./vendor/bin/drush st
-
-      - name: Export Database.
-        run:  |
-          ./vendor/bin/drush sql:dump > ./databases/sql_dump.sqlite
-          git branch
-          git status
-          git config user.name "Bhanu"
-          git config user.email '8525040+bhanu951@users.noreply.github.com'
-          git add databases/sql_dump.sqlite
-          git commit -m "Sql Lite Database Created."
-          git push origin feature/ci-integration-added
         
       # - name: Config Deployment
         # run: |
