@@ -33,6 +33,7 @@ jobs:
         run: |
           sudo apt-get install -y mysql-client
           mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -proot -e "select @@hostname;show variables where Variable_name like '%host%';"
+          mysql --port ${{ job.services.mysql.ports['3306'] }} -uroot -proot --protocol=tcp -e "CREATE DATABASE IF NOT EXISTS d8cards;"
           
       - name: Checkout 🛎️
         uses: actions/checkout@v2
