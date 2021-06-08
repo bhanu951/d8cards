@@ -34,7 +34,7 @@
     ],
     "require": {
         "php": ">=7.3",
-        "bhanu951/example_codes": "8.x-dev",
+        "bhanu951/example_codes": "^8.x-dev",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
         "drupal/core-composer-scaffold": "^8.8",
