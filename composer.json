@@ -11,6 +11,19 @@
     ],
     "repositories": [
         {
+            "type": "package",
+            "package": {
+                "name": "bhanu951/example_codes",
+                "version": "8.x-dev",
+                "type": "drupal-custom-module",
+                "source": {
+                    "url": "https://git.drupalcode.org/sandbox/Bhanu951-3103712.git",
+                    "type": "git",
+                    "reference": "8.x-dev"
+                }
+            }
+        },
+        {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
         },
@@ -21,11 +34,12 @@
     ],
     "require": {
         "php": ">=7.3",
+        "bhanu951/example_codes": "8.x-dev",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
         "drupal/core-composer-scaffold": "^8.8",
-        "drupal/core-recommended": "^8.8",
         "drupal/core-project-message": "^8.8",
+        "drupal/core-recommended": "^8.8",
         "drush/drush": "^10.3",
         "vlucas/phpdotenv": "^5.1",
         "webflo/drupal-finder": "^1.2"
