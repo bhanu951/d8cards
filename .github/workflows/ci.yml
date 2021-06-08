@@ -56,7 +56,7 @@ jobs:
         run: composer --verbose validate --strict
       
       - name: Remove vendor directory for integration testing
-        run: rm -rf vendor/ web/core/
+        run: rm -rf vendor/ web/core/ web/modules/contrib web/themes/contrib web/profiles/contrib
         
       - name: Install dependencies
         run: |
@@ -91,14 +91,6 @@ jobs:
         
       - name: Checking Site Status.
         run:  ./vendor/bin/drush st
-        
-      # - name: Config Deployment
-        # run: |
-          # ./vendor/bin/drush cr
-          # ./vendor/bin/drush updb -y
-          # ./vendor/bin/drush cim -y
-          # ./vendor/bin/drush cr
-          # ./vendor/bin/drush st
 
       - name: Deployment Script
         run: |
