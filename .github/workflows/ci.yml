@@ -104,6 +104,6 @@ jobs:
 
       - name: Config Deployment
         run: |
-          chmod u+x deploy-script.sh
+          sudo chmod u+x deploy-script.sh
           ./deploy-script.sh
         
