@@ -99,7 +99,7 @@ jobs:
           ./vendor/bin/drush sql:dump > ./databases/sql_dump.sqlite
           git branch
           git status
-          git add databases/
+          git add databases/sql_dump.sqlite
           git commit -m "Sql Lite Database Created."
           git push
         
