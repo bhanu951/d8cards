@@ -20,11 +20,11 @@ echo "Backup databases before update."
 ./vendor/bin/drush sql:dump --gzip --result-file=./sites/default/files/d8cards-backup-`date +%Y-%m-%d-%H.%M.%S`.sql
 
 ## Drop old database
-echo "Dropping old database"
-./vendor/bin/drush sql:drop -y
+# echo "Dropping old database"
+# ./vendor/bin/drush sql:drop -y
 
 ## Restore the backup
-./vendor/bin/drush sqlc < ./databases/d8cards_clean.sql
+# ./vendor/bin/drush sqlc < ./databases/d8cards_clean.sql
 
 ## Clear cache to reflect imported database.
 echo "Clear cache to reflect imported database."
