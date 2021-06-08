@@ -1,0 +1,98 @@
+name: Build & Test Drupal
+
+on: [push]
+
+env:
+  COMPOSER_MEMORY_LIMIT: -1
+  SIMPLETEST_DB: sqlite://tmp/site.sqlite
+  SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
+
+jobs:
+  build:
+    name: "Tests | PHP ${{ matrix.php-versions }} | Drupal ${{ matrix.drupal }}"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        experimental: [false]
+        php-versions:
+          - "7.3"
+          - "7.4"
+        drupal:
+          - "^8.9"
+    steps:
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-versions }}"
+          tools: composer:v2
+          extensions: dom, curl, libxml, mbstring, zip, pdo, mysql, pdo_mysql, gd, pdo_sqlite
+          
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+            
+      - name: Update composer
+        run: composer --verbose self-update --${{ matrix.composer-channel }}
+
+      - name: Dump composer verson
+        run: composer --version
+
+      - name: Validate composer.json and composer.lock
+        run: composer --verbose validate --strict
+      
+      - name: Remove vendor directory for integration testing
+        run: rm -rf vendor/ web/core/ web/modules/contrib web/themes/contrib web/profiles/contrib
+        
+      - name: Install dependencies
+        run: |
+          composer --verbose install
+          echo "export PATH=$PATH:$GITHUB_WORKSPACE/vendor/bin" >> ~/.bash_profile
+          
+      - run: ./vendor/bin/drush si standard --site-name='D8cards Test' --account-name=admin --account-pass=admin --account-mail='admin@d8cards.test' --sites-subdir=default --locale='uk' --verbose --yes --db-url=sqlite://tmp/site.sqlite
+
+      - run: ./vendor/bin/drush runserver $SIMPLETEST_BASE_URL &
+
+      - run: until curl -s $SIMPLETEST_BASE_URL; do true; done > /dev/null
+
+        # https://www.drupal.org/project/drupal/issues/3182653
+        # https://www.drupal.org/node/3176567
+        # - if: ${{ matrix.php-versions == '7.4' }} || ${{ matrix.php-versions == '8.0' }}
+        # run: composer require phpspec/prophecy-phpunit:^2 --with-all-dependencies
+
+      - name: Run a single unit test to verfiy the testing setup.
+        run: ./vendor/bin/phpunit -c ./web/core ./web/core/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
+
+      # - name: Checking Coding standards.
+      #   run: ./vendor/bin/phpunit -c ./web/modules/custom ./web/themes/custom ./web/profiles/custom
+      
+      # - name: Check Drupal best practices
+        # run: ./vendor/bin/phpcs --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md,yml ./web/modules/custom ./web/themes/custom ./web/profiles/custom
+        
+      - name: Checking Depreceated code.
+        run: |
+          ./vendor/bin/drupal-check -vvv web/modules/custom
+          ./vendor/bin/drupal-check -vvv web/themes/custom
+          ./vendor/bin/drupal-check -vvv web/profiles/custom
+        
+      - name: Checking Site Status.
+        run:  ./vendor/bin/drush st
+
+      - name: Deployment Script
+        run: |
+          sudo chmod u+x deploy-script.sh
+          ./deploy-script.sh

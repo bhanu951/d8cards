@@ -1,0 +1,60 @@
+diff --git a/queue_examples/src/Controller/LocationsController.php b/queue_examples/src/Controller/LocationsController.php
+index f0edfa1..057b127 100644
+--- a/queue_examples/src/Controller/LocationsController.php
++++ b/queue_examples/src/Controller/LocationsController.php
+@@ -14,6 +14,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+ use Drupal\Core\Messenger\MessengerInterface;
+ use Drupal\Component\Serialization\Json;
+ use Drupal\Core\Extension\ModuleHandlerInterface;
++use Drupal\Core\Pager\PagerManagerInterface;
+ 
+ /**
+  * Class LocationsController.
+@@ -78,11 +79,18 @@ class LocationsController extends ControllerBase {
+    * @var \Drupal\Core\Extension\ModuleHandlerInterface
+    */
+   protected $moduleHandler;
+-
++  
++  /**
++   * The pager manager.
++   *
++   * @var \Drupal\Core\Pager\PagerManagerInterface
++   */
++  protected $pagerManager;
++  
+   /**
+    * {@inheritdoc}
+    */
+-  public function __construct(Client $http_client, Time $time, QueueFactory $queue_factory, QueueWorkerManager $queue_manager, LoggerChannelFactoryInterface $logger, MessengerInterface $messenger, Connection $connection, ModuleHandlerInterface $module_handler) {
++  public function __construct(Client $http_client, Time $time, QueueFactory $queue_factory, QueueWorkerManager $queue_manager, LoggerChannelFactoryInterface $logger, MessengerInterface $messenger, Connection $connection, ModuleHandlerInterface $module_handler, PagerManagerInterface $pagerManager) {
+     $this->httpClient = $http_client;
+     $this->time = $time;
+     $this->queue_factory = $queue_factory;
+@@ -91,6 +99,7 @@ class LocationsController extends ControllerBase {
+     $this->messenger = $messenger;
+     $this->database = $connection;
+     $this->moduleHandler = $module_handler;
++    $this->pagerManager = $pagerManager;
+   }
+ 
+   /**
+@@ -105,7 +114,8 @@ class LocationsController extends ControllerBase {
+       $container->get('logger.factory'),
+       $container->get('messenger'),
+       $container->get('database'),
+-      $container->get('module_handler')
++      $container->get('module_handler'),
++      $container->get('pager.manager')
+     );
+   }
+ 
+@@ -172,7 +182,7 @@ class LocationsController extends ControllerBase {
+     // Get total items count.
+     $total = count($items);
+     // Get the number of the current page.
+-    $currentPage = pager_default_initialize($total, $itemsPerPage);
++    $currentPage = $this->pagerManager->createPager($total, $itemsPerPage);
+     // Split an array into chunks.
+     $chunks = array_chunk($items, $itemsPerPage);
+     // Return current group item.

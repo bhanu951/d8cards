@@ -1,0 +1,21 @@
+diff --git a/command_examples/src/Commands/DrushCommandCall.php b/command_examples/src/Commands/DrushCommandCall.php
+index 0b04104..42578b0 100644
+--- a/command_examples/src/Commands/DrushCommandCall.php
++++ b/command_examples/src/Commands/DrushCommandCall.php
+@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+ use GuzzleHttp\ClientInterface;
+ use Drupal\Component\Utility\Random;
+-use Drupal\Component\Utility\Crypt;
+ 
+ /**
+  * A Drush Command Call command file.
+@@ -92,7 +91,7 @@ class DrushCommandCall extends DrushCommands {
+ 
+       $random = new Random();
+       $number = rand(10, 10000);
+-      $crypt = Crypt::randomBytes($number);
++      $crypt = random_bytes($number);
+       $this->logger->notice(dt('Generated Random Number is : ' . $crypt));
+ 
+     }
